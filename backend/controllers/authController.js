@@ -4,77 +4,64 @@ const User = require("../model/User");
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || "1d",
+    expiresIn: "1d",
   });
 };
 
-const sendTokenResponse = (user, statusCode, res, message) => {
-  const token = createToken(user._id);
-
-  const cookieOptions = {
-    httpOnly: true,
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Lax",
-  };
-
-  user.password = undefined;
-
-  res
-    .status(statusCode)
-    .cookie("token", token, cookieOptions)
-    .json({ message, user });
-};
-
+// SIGNUP
 exports.signup = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
-    const { name, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const existing = await User.findOne({ email });
+    if (existing)
+      return res.status(400).json({ message: "Email already exists" });
 
-    if (existingUser) {
-      return res.status(400).json({ message: "Email is already in use." });
-    }
+    const hash = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email, password: hash });
+    const token = createToken(user._id);
 
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    const newUser = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    sendTokenResponse(newUser, 201, res, "User registered successfully");
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Lax",
+        secure: false, // ✅ false for localhost, true in prod with HTTPS
+      })
+      .json({ message: "User registered", user: { name, email } });
   } catch (err) {
-    res.status(500).json({ message: "Signup failed", error: err.message });
+    res.status(500).json({ message: "Signup error", error: err.message });
   }
 };
 
+// LOGIN
 exports.login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(400).json({ message: "Invalid credentials" });
 
-    sendTokenResponse(user, 200, res, "Login successful");
+    const token = createToken(user._id);
+
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Lax", // ✅ cross-origin cookie sharing
+        secure: false, // ✅ only false for local testing
+      })
+      .json({ message: "Login successful", user: { name: user.name, email } });
   } catch (err) {
-    res.status(500).json({ message: "Login failed", error: err.message });
+    res.status(500).json({ message: "Login error", error: err.message });
   }
 };
 
+// GET PROFILE (Protected)
 exports.getProfile = async (req, res) => {
-  res.status(200).json({ message: "Profile loaded successfully", user: req.user });
+  res.json({ message: "Profile loaded", user: req.user });
 };
 
+// LOGOUT
 exports.logout = (req, res) => {
-  res.cookie("token", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
-  res.status(200).json({ message: "Logged out successfully" });
+  res.clearCookie("token").json({ message: "Logged out" });
 };
