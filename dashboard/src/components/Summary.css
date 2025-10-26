@@ -1,0 +1,57 @@
+/* --- Professional Dashboard UI --- */
+.summary-page {
+  /* ... existing styles ... */
+}
+.summary-header {
+  /* ... existing styles ... */
+}
+.portfolio-performance-card {
+  /* ... existing styles ... */
+}
+/* ... other styles from previous step ... */
+
+/* --- 🚀 NEW Market Watch Section --- */
+.market-watch-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.indices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.index-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.index-card.loading {
+  height: 120px;
+  background-color: var(--bg-muted);
+}
+
+.index-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.index-card-price {
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  margin-bottom: 0.25rem;
+}
+
+.index-card-change {
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+}

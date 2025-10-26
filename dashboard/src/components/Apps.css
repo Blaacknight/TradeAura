@@ -1,0 +1,136 @@
+:root {
+  /* NOTE: Using placeholder colors. Replace with your actual theme variables. */
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --bg-primary: #121212;
+  --bg-surface: #1e1e1e;
+  --bg-muted: #2a2a2a;
+  --border-color: #333333;
+  --color-primary: #007bff;
+  --color-primary-light: rgba(0, 123, 255, 0.1);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 10px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+  --radius-md: 8px;
+  --radius-lg: 16px;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: radial-gradient(circle at 25% 25%, var(--color-primary-light) 0%, transparent 30%),
+                    radial-gradient(circle at 75% 75%, var(--color-primary-light) 0%, transparent 30%);
+}
+
+.apps-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.app-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(0, 123, 255, 0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.app-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.app-card:hover::before {
+  opacity: 1;
+}
+
+.app-icon {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.app-icon .MuiSvgIcon-root {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 10px var(--color-primary));
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.app-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  min-height: 4.5rem;
+}
+
+.app-button {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: #fff;
+  background-image: linear-gradient(45deg, var(--color-primary) 0%, #0056b3 100%);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.app-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.app-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+} 
+
+
+
+
