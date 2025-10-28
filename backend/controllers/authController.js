@@ -23,8 +23,8 @@ exports.signup = async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        sameSite: 'None',
-        secure: true, // ✅ false for localhost, true in prod with HTTPS
+        sameSite: 'Lax',
+        secure: false, // ✅ false for localhost, true in prod with HTTPS
       })
       .json({ message: "User registered", user: { name, email } });
   } catch (err) {
@@ -47,8 +47,8 @@ exports.login = async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        sameSite: 'None', // ✅ cross-origin cookie sharing, Local use "Lax", for deployed use 'None'
-        secure: true, // ✅ only false for local testing, true for deployed
+        sameSite: 'Lax', // ✅ cross-origin cookie sharing, Local use "Lax", for deployed use 'None'
+        secure: false, // ✅ only false for local testing, true for deployed
       })
       .json({ message: "Login successful", user: { name: user.name, email } });
   } catch (err) {
