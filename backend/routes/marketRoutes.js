@@ -41,6 +41,7 @@ router.get("/search-stocks", async (req, res) => {
       .map((quote) => ({ symbol: quote.symbol, name: quote.longname }));
     res.json(formattedResults);
   } catch (error) {
+    console.error("Search stocks error:", err);
     res
       .status(500)
       .json({ error: "An error occurred during the stock search." });
